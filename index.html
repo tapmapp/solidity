@@ -1,0 +1,228 @@
+<html>
+    <head>
+        <title>Decentralized Cooking</title>
+        <style>
+            body { color: #666; margin: 25px; }
+            h2 { text-transform: uppercase; font-size: 42px; color: #9c9c6a; }
+            ul { list-style: none; padding: 0; margin: 0; }
+        </style>
+    </head>
+    <body>
+        <div class="header-container">
+            <h2>Eternal Cooking</h2>
+            <h5>Perpetual receipes to enjoy forever</h5>
+        </div>
+        <div class="content-container">
+            <div id="menu-container"></div>
+            <div id="content-container">
+                <input id="create-recipe" type="text"/>
+                <button id="create-recipe-button">Create Recipe</button>
+            </div>
+        </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+        <script src="./js/recipes-menu.js"></script>
+        <script src="./js/recipe.js"></script>
+        <script src="./js/recipes-service.js"></script>
+        <script>
+            
+            const init = async () => {
+
+                const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+                
+                const accounts = await web3.eth.getAccounts()
+                console.log(accounts[0])
+                    
+                const contract_address = "0xf344FeAd7A0c9f86ce1278a4CFA117EE31733Ad0";    
+                const contract_abi = [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "name": "IngredientAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "name": "RecipeAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "success",
+          "type": "bool"
+        }
+      ],
+      "name": "StepAdded",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_recipeId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRecipe",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getRecipesIds",
+      "outputs": [
+        {
+          "internalType": "bytes32[]",
+          "name": "ids",
+          "type": "bytes32[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        }
+      ],
+      "name": "createRecipe",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_amount",
+          "type": "string"
+        },
+        {
+          "internalType": "enum Recipes.Unit",
+          "name": "_unit",
+          "type": "uint8"
+        }
+      ],
+      "name": "createIngredient",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_desc",
+          "type": "string"
+        }
+      ],
+      "name": "createStep",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ];
+                const Recipes = new web3.eth.Contract(contract_abi, contract_address);
+                
+
+      
+                // console.log(RecipesServiceModule);
+
+                var recipes = await Recipes.methods.getRecipesIds().call();
+                console.log(recipes);
+
+                var recipe = await Recipes.methods.getRecipe(recipes[0]).call();
+                console.log(recipe);
+                
+
+                // let result = await Diary.methods.createStory(new Date().getTime(), 'Hello Tamara').send({ from: '0x0C9eAD1017E62B3a8598afaD6fFfDd0c844eBf62', gas: 3000000 });
+                
+                /* console.log(Diary); */
+                // Diary.once('StoryAdded', {}, function(error, event) { console.log(event); });
+                // let result2 = await Diary.methods.getStory(0).call();
+                // console.log(result2.text);
+
+            }
+            
+            init();
+            
+        </script>
+</html>
